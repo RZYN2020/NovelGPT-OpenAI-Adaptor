@@ -45,3 +45,8 @@ NOVEL_GPT_API_KEY=你的NovelGPT API密钥
 python server.py
 ```
 
+或者
+
+```bash
+uvicorn server:app --port 8888 --host 127.0.0.1
+```

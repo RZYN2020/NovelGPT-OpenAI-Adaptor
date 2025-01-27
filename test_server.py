@@ -13,6 +13,40 @@ load_dotenv()
 BASE_URL = "http://localhost:8000/v1"
 API_KEY = os.getenv("NOVEL_GPT_API_KEY")
 
+
+@pytest.fixture
+def http2_client():
+    return httpx.Client(
+        http2=True,
+        verify=False  # 测试环境下可以禁用SSL验证
+    )
+
+def test_http2_support(http2_client):
+    """测试服务器是否支持HTTP/2协议"""
+    response = http2_client.get("https://localhost:8000/health")
+    assert response.status_code == 200
+    assert response.http_version == "HTTP/2"
+    assert response.json() == {"status": "healthy"}
+
+def test_http2_chat_completions(http2_client):
+    """测试HTTP/2下的chat completions接口"""
+    headers = {
+        "Authorization": f"Bearer {YOUR_API_KEY}"
+    }
+    data = {
+        "model": "nalang-xl",
+        "messages": [{"role": "user", "content": "你好"}],
+        "stream": False
+    }
+    
+    response = http2_client.post(
+        "https://localhost:8000/v1/chat/completions",
+        headers=headers,
+        json=data
+    )
+    assert response.status_code == 200
+    assert response.http_version == "HTTP/2"
+
 def test_health_check():
     """测试服务器健康状态"""
     print("\n测试服务器健康状态:")

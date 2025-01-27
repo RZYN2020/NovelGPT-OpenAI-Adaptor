@@ -215,4 +215,22 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # 检查证书文件是否存在
+    cert_file = "cert.pem"
+    key_file = "key.pem"
+    
+    if not (os.path.exists(cert_file) and os.path.exists(key_file)):
+        print("未找到SSL证书，正在生成自签名证书...")
+        from generate_cert import generate_self_signed_cert
+        generate_self_signed_cert()
+        print("证书生成完成")
+
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=8000,
+        ssl_keyfile=key_file,
+        ssl_certfile=cert_file,
+        http="auto",  # 明确指定使用HTTP/2
+        ws="wsproto"
+    )
