@@ -140,7 +140,6 @@ async def chat_completions(
                 }
             }
         )
-
 @app.get("/v1/models")
 async def list_models(
     api_key: str = Depends(verify_api_key)
@@ -153,9 +152,63 @@ async def list_models(
                 "id": "nalang-xl",
                 "object": "model",
                 "created": 1677610602,
-                "owned_by": "novel",
+                "owned_by": "nalang",
                 "permission": [],
                 "root": "nalang-xl",
+                "parent": None
+            },
+            {
+                "id": "nalang-xl-16k",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-xl-16k",
+                "parent": None
+            },
+            {
+                "id": "nalang-v17t-16k",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-v17t-16k",
+                "parent": None
+            },
+            {
+                "id": "nalang-max-4",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-max-4",
+                "parent": None
+            },
+            {
+                "id": "nalang-xl-8",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-xl-8",
+                "parent": None
+            },
+            {
+                "id": "nalang-turbo-v18",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-turbo-v18",
+                "parent": None
+            },
+            {
+                "id": "nalang-turbo-v19",
+                "object": "model",
+                "created": 1677610602,
+                "owned_by": "nalang",
+                "permission": [],
+                "root": "nalang-turbo-v19",
                 "parent": None
             }
         ]
@@ -167,7 +220,13 @@ async def retrieve_model(
     api_key: str = Depends(verify_api_key)
 ) -> Dict:
     """返回指定模型的信息"""
-    if model != "nalang-xl":
+    valid_models = [
+        "nalang-xl", "nalang-xl-16k", "nalang-v17t-16k", 
+        "nalang-max-4", "nalang-xl-8", "nalang-turbo-v18", 
+        "nalang-turbo-v19"
+    ]
+    
+    if model not in valid_models:
         raise HTTPException(
             status_code=404,
             detail={
@@ -183,9 +242,9 @@ async def retrieve_model(
         "id": model,
         "object": "model",
         "created": 1677610602,
-        "owned_by": "novel",
+        "owned_by": "nalang",
         "permission": [],
-        "root": "nalang-xl",
+        "root": model,
         "parent": None
     }
 
